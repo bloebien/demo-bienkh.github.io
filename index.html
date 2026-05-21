@@ -3,180 +3,1082 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ប្រព័ន្ធគ្រប់គ្រងសាលារៀន</title>
-    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&display=swap" rel="stylesheet">
+    <title>ប្រព័ន្ធគ្រប់គ្រងសាលារៀនឆ្លាតវៃ - Smart School Management System</title>
+    <!-- Tailwind CSS for modern design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts: Battambang & Kantumruy Pro for premium Khmer UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome for high-quality icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --background: #f4f6f9;
-            --text-color: #333;
-            --card-bg: #ffffff;
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        khmer: ['Battambang', 'sans-serif'],
+                        title: ['Kantumruy Pro', 'sans-serif'],
+                    }
+                }
+            }
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Battambang', sans-serif; }
-        body { display: flex; height: 100vh; background-color: var(--background); color: var(--text-color); }
-        
-        /* Sidebar */
-        .sidebar { width: 250px; background-color: var(--primary); color: white; display: flex; flex-direction: column; }
-        .sidebar h2 { text-align: center; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 18px; }
-        .nav-links { list-style: none; padding: 20px 0; flex-grow: 1; }
-        .nav-links li { padding: 15px 20px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 15px; }
-        .nav-links li:hover, .nav-links li.active { background-color: var(--secondary); }
-        
-        /* Main Content */
-        .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .header h1 { color: var(--primary); }
-        
-        /* Sections */
-        .section { display: none; animation: fadeIn 0.5s; }
-        .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* Cards & Tables */
-        .card { background: var(--card-bg); padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        table th, table td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        table th { background-color: var(--secondary); color: white; }
-        
-        /* ID Card Design */
-        .id-card-container { display: flex; justify-content: center; margin-top: 20px; }
-        .id-card { background: linear-gradient(135deg, #3498db, #2980b9); color: white; width: 320px; border-radius: 15px; padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); text-align: center; position: relative; overflow: hidden; }
-        .id-card img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid white; margin-bottom: 10px; object-fit: cover; }
-        .id-card h3 { margin-bottom: 5px; font-size: 20px; }
-        .id-card p { font-size: 14px; margin-bottom: 5px; opacity: 0.9; }
-        .id-card .barcode { margin-top: 15px; background: white; height: 30px; border-radius: 5px; width: 80%; margin-left: auto; margin-right: auto; }
-        
-        /* Grid */
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .stat-card { background: var(--card-bg); padding: 20px; border-radius: 10px; text-align: center; border-left: 5px solid var(--secondary); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    </script>
+    <style>
+        body {
+            font-family: 'Battambang', sans-serif;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Kantumruy Pro', sans-serif;
+            font-weight: 700;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-area, #printable-area * {
+                visibility: visible;
+            }
+            #printable-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
     </style>
 </head>
-<body>
+<body class="bg-slate-100 min-height-screen flex flex-col md:flex-row overflow-hidden">
 
-    <!-- Sidebar Navigation -->
-    <div class="sidebar">
-        <h2><i class="fas fa-school"></i> សាលារៀនឆ្លាតវៃ</h2>
-        <ul class="nav-links">
-            <li class="active" onclick="showSection('home')"><i class="fas fa-home"></i> ទំព័រដើម</li>
-            <li onclick="showSection('students')"><i class="fas fa-user-graduate"></i> ព័ត៌មានសិស្ស</li>
-            <li onclick="showSection('teachers')"><i class="fas fa-chalkboard-teacher"></i> អំពីគ្រូបង្រៀន</li>
-            <li onclick="showSection('grades')"><i class="fas fa-chart-line"></i> លទ្ធផលសិក្សា</li>
-            <li onclick="showSection('attendance')"><i class="fas fa-calendar-check"></i> បញ្ជីវត្តមាន</li>
-            <li onclick="showSection('idcard')"><i class="fas fa-id-badge"></i> កាតសិស្ស</li>
-        </ul>
-    </div>
-
-    <!-- Main Content Area -->
-    <div class="main-content">
+    <!-- SIDEBAR -->
+    <aside class="w-full md:w-64 bg-slate-900 text-white flex flex-col z-30 shadow-xl no-print">
+        <div class="p-5 flex items-center gap-3 border-b border-slate-800 bg-slate-950">
+            <div class="bg-blue-600 p-2.5 rounded-lg text-white">
+                <i class="fas fa-graduation-cap text-xl"></i>
+            </div>
+            <div>
+                <h2 class="text-sm tracking-wider uppercase text-blue-400 font-bold">វិទ្យាល័យឆ្លាតវៃ</h2>
+                <p class="text-xs text-slate-400">ប្រព័ន្ធគ្រប់គ្រងសាលា</p>
+            </div>
+        </div>
         
-        <!-- 1. ទំព័រដើម (Home) -->
-        <div id="home" class="section active">
-            <div class="header">
-                <h1>ទំព័រដើម (Dashboard)</h1>
+        <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+            <a href="#" onclick="switchTab('dashboard')" id="btn-dashboard" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all bg-blue-600 text-white font-medium">
+                <i class="fas fa-th-large w-5 text-center"></i> ទំព័រដើម
+            </a>
+            <a href="#" onclick="switchTab('students')" id="btn-students" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-all">
+                <i class="fas fa-user-graduate w-5 text-center"></i> ព័ត៌មានសិស្ស
+            </a>
+            <a href="#" onclick="switchTab('teachers')" id="btn-teachers" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-all">
+                <i class="fas fa-chalkboard-teacher w-5 text-center"></i> អំពីគ្រូបង្រៀន
+            </a>
+            <a href="#" onclick="switchTab('grades')" id="btn-grades" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-all">
+                <i class="fas fa-star w-5 text-center"></i> លទ្ធផលសិក្សា
+            </a>
+            <a href="#" onclick="switchTab('attendance')" id="btn-attendance" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-all">
+                <i class="fas fa-calendar-check w-5 text-center"></i> បញ្ជីវត្តមាន
+            </a>
+            <a href="#" onclick="switchTab('idcards')" id="btn-idcards" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-all">
+                <i class="fas fa-id-badge w-5 text-center"></i> កាតសម្គាល់ខ្លួន
+            </a>
+            <div class="pt-4 mt-4 border-t border-slate-800">
+                <span class="px-4 text-[10px] uppercase tracking-wider text-slate-500 block mb-2">សម្រាប់អ្នកអភិវឌ្ឍន៍</span>
+                <a href="#" onclick="switchTab('api-hub')" id="btn-api-hub" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-emerald-400 hover:bg-emerald-950/30 hover:text-emerald-300 transition-all">
+                    <i class="fas fa-code w-5 text-center"></i> PHP API & Database
+                </a>
             </div>
-            <div class="grid-3">
-                <div class="stat-card">
-                    <h3><i class="fas fa-users text-primary"></i> សិស្សសរុប</h3>
-                    <h2 style="margin-top: 10px; color: var(--secondary);">១,២៥០ នាក់</h2>
-                </div>
-                <div class="stat-card">
-                    <h3><i class="fas fa-chalkboard-teacher"></i> គ្រូបង្រៀន</h3>
-                    <h2 style="margin-top: 10px; color: var(--secondary);">៨៥ នាក់</h2>
-                </div>
-                <div class="stat-card">
-                    <h3><i class="fas fa-door-open"></i> បន្ទប់រៀន</h3>
-                    <h2 style="margin-top: 10px; color: var(--secondary);">៤២ បន្ទប់</h2>
-                </div>
-            </div>
+        </nav>
+        
+        <div class="p-4 border-t border-slate-800 text-center text-xs text-slate-500 bg-slate-950/50">
+            កម្រិតសាកល្បង v2.5 &copy; 2026
         </div>
+    </aside>
 
-        <!-- 2. ព័ត៌មានសិស្ស (Students) -->
-        <div id="students" class="section">
-            <div class="header"><h1>បញ្ជីព័ត៌មានសិស្ស</h1></div>
-            <div class="card">
-                <table>
-                    <tr><th>អត្តលេខ</th><th>ឈ្មោះសិស្ស</th><th>ភេទ</th><th>ថ្នាក់</th><th>លេខទូរស័ព្ទ</th></tr>
-                    <tr><td>STU001</td><td>សុខ សាន្ត</td><td>ប្រុស</td><td>១២ ក</td><td>012 345 678</td></tr>
-                    <tr><td>STU002</td><td>ចាន់ ធីតា</td><td>ស្រី</td><td>១២ ក</td><td>098 765 432</td></tr>
-                    <tr><td>STU003</td><td>មាស សុវណ្ណ</td><td>ប្រុស</td><td>១១ ខ</td><td>011 222 333</td></tr>
-                </table>
-            </div>
-        </div>
-
-        <!-- 3. អំពីគ្រូបង្រៀន (Teachers) -->
-        <div id="teachers" class="section">
-            <div class="header"><h1>អំពីគ្រូបង្រៀន</h1></div>
-            <div class="grid-3">
-                <div class="card" style="text-align: center;">
-                    <i class="fas fa-user-circle fa-4x" style="color:#bdc3c7; margin-bottom:15px;"></i>
-                    <h3>លោកគ្រូ សុខ ជា</h3>
-                    <p>ឯកទេស៖ គណិតវិទ្យា</p>
-                </div>
-                <div class="card" style="text-align: center;">
-                    <i class="fas fa-user-circle fa-4x" style="color:#bdc3c7; margin-bottom:15px;"></i>
-                    <h3>អ្នកគ្រូ នួន សុខា</h3>
-                    <p>ឯកទេស៖ រូបវិទ្យា</p>
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-1 flex flex-col overflow-hidden">
+        
+        <!-- TOP NAVIGATION BAR -->
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-10 no-print">
+            <div class="flex items-center gap-4">
+                <button class="md:hidden text-slate-600 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <div class="hidden md:flex items-center gap-2 text-sm text-slate-500">
+                    <i class="far fa-calendar-alt text-blue-500"></i>
+                    <span id="current-date">ថ្ងៃព្រហស្បតិ៍ ទី២១ ខែឧសភា ឆ្នាំ២០២៦</span>
                 </div>
             </div>
-        </div>
-
-        <!-- 4. លទ្ធផលសិក្សា (Grades) -->
-        <div id="grades" class="section">
-            <div class="header"><h1>លទ្ធផលសិក្សាប្រចាំខែ</h1></div>
-            <div class="card">
-                <table>
-                    <tr><th>ឈ្មោះសិស្ស</th><th>គណិតវិទ្យា</th><th>រូបវិទ្យា</th><th>អក្សរសាស្ត្រខ្មែរ</th><th>ចំណាត់ថ្នាក់</th></tr>
-                    <tr><td>សុខ សាន្ត</td><td>៩៥</td><td>៨៨</td><td>៩០</td><td>លេខ ១</td></tr>
-                    <tr><td>ចាន់ ធីតា</td><td>៨៥</td><td>៩២</td><td>៨៩</td><td>លេខ ២</td></tr>
-                </table>
-            </div>
-        </div>
-
-        <!-- 5. បញ្ជីវត្តមាន (Attendance) -->
-        <div id="attendance" class="section">
-            <div class="header"><h1>បញ្ជីវត្តមានថ្ងៃនេះ</h1></div>
-            <div class="card">
-                <table>
-                    <tr><th>ឈ្មោះសិស្ស</th><th>ស្ថានភាព</th><th>កាលបរិច្ឆេទ</th></tr>
-                    <tr><td>សុខ សាន្ត</td><td style="color: green;"><i class="fas fa-check-circle"></i> វត្តមាន</td><td>ថ្ងៃនេះ</td></tr>
-                    <tr><td>ចាន់ ធីតា</td><td style="color: red;"><i class="fas fa-times-circle"></i> អវត្តមាន</td><td>ថ្ងៃនេះ</td></tr>
-                </table>
-            </div>
-        </div>
-
-        <!-- 6. កាតសិស្ស (ID Card) -->
-        <div id="idcard" class="section">
-            <div class="header"><h1>កាតសម្គាល់សិស្ស (ID Card)</h1></div>
-            <div class="id-card-container">
-                <div class="id-card">
-                    <h2>វិទ្យាល័យ ឆ្លាតវៃ</h2>
-                    <hr style="margin: 10px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.3);">
-                    <!-- Placeholder for Student Image -->
-                    <img src="https://via.placeholder.com/100" alt="Student Photo">
-                    <h3>សុខ សាន្ត</h3>
-                    <p>អត្តលេខ៖ STU001</p>
-                    <p>ថ្នាក់រៀន៖ ១២ ក</p>
-                    <p>ឆ្នាំសិក្សា៖ ២០២៥-២០២៦</p>
-                    <div class="barcode"></div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <script>
-        function showSection(sectionId) {
-            // លាក់ទំព័រទាំងអស់
-            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-            // បង្ហាញទំព័រដែលបានចុច
-            document.getElementById(sectionId).classList.add('active');
             
-            // ដកពណ៌ពីប៊ូតុងទាំងអស់
-            document.querySelectorAll('.nav-links li').forEach(li => li.classList.remove('active'));
-            // ដាក់ពណ៌លើប៊ូតុងដែលកំពុងចុច
-            event.currentTarget.classList.add('active');
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <button class="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition">
+                        <i class="far fa-bell text-lg"></i>
+                        <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full ring-2 ring-white"></span>
+                    </button>
+                </div>
+                <div class="flex items-center gap-3 pl-3 border-l border-slate-200">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100" alt="Admin avatar" class="w-9 h-9 rounded-full object-cover ring-2 ring-blue-100">
+                    <div class="hidden lg:block text-left">
+                        <h4 class="text-xs font-bold text-slate-800">ស៊្រុន មុន្នីរ័ត្ន</h4>
+                        <p class="text-[10px] text-slate-500">អ្នកគ្រប់គ្រងទូទៅ</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- APP TABS CONTAINER -->
+        <div class="flex-1 overflow-y-auto p-6 md:p-8">
+            
+            <!-- 1. TAB: DASHBOARD -->
+            <section id="tab-dashboard" class="tab-content space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl text-slate-800 font-bold">ទំព័រដើមព័ត៌មានវិទ្យា</h1>
+                        <p class="text-slate-500 mt-1 text-sm">ទិដ្ឋភាពទូទៅ និងស្ថិតិសាលារៀននាពេលបច្ចុប្បន្ន</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="switchTab('students')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 shadow-md shadow-blue-200">
+                            <i class="fas fa-plus"></i> បន្ថែមសិស្សថ្មី
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 font-bold uppercase tracking-wider block mb-1">សិស្សសរុប</span>
+                            <h3 class="text-3xl text-slate-800 font-bold" id="stat-total-students">0</h3>
+                            <span class="text-xs text-emerald-500 font-semibold mt-1 inline-flex items-center gap-1">
+                                <i class="fas fa-arrow-up"></i> +១២% ខែនេះ
+                            </span>
+                        </div>
+                        <div class="bg-blue-50 text-blue-600 p-4 rounded-xl">
+                            <i class="fas fa-user-graduate text-2xl"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 font-bold uppercase tracking-wider block mb-1">គ្រូបង្រៀន</span>
+                            <h3 class="text-3xl text-slate-800 font-bold" id="stat-total-teachers">0</h3>
+                            <span class="text-xs text-slate-500 font-semibold mt-1 block">ឯកទេសពេញលេញ</span>
+                        </div>
+                        <div class="bg-emerald-50 text-emerald-600 p-4 rounded-xl">
+                            <i class="fas fa-chalkboard-teacher text-2xl"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 font-bold uppercase tracking-wider block mb-1">អត្រាវត្តមាន</span>
+                            <h3 class="text-3xl text-slate-800 font-bold" id="stat-attendance">៩៨.២%</h3>
+                            <span class="text-xs text-emerald-500 font-semibold mt-1 inline-flex items-center gap-1">
+                                <i class="fas fa-check-circle"></i> ល្អប្រសើរ
+                            </span>
+                        </div>
+                        <div class="bg-purple-50 text-purple-600 p-4 rounded-xl">
+                            <i class="fas fa-calendar-check text-2xl"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 font-bold uppercase tracking-wider block mb-1">ថ្នាក់រៀនសរុប</span>
+                            <h3 class="text-3xl text-slate-800 font-bold">១៦ ថ្នាក់</h3>
+                            <span class="text-xs text-blue-500 font-semibold mt-1 block">២ វេន (ព្រឹក/រសៀល)</span>
+                        </div>
+                        <div class="bg-amber-50 text-amber-600 p-4 rounded-xl">
+                            <i class="fas fa-school text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Announcements -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 lg:col-span-2">
+                        <h3 class="text-lg text-slate-800 font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-bullhorn text-blue-600"></i> សេចក្តីជូនដំណឹង និងព្រឹត្តិការណ៍ថ្មីៗ
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="p-4 rounded-xl bg-blue-50/50 border border-blue-100 flex gap-4">
+                                <div class="bg-blue-600 text-white h-10 w-10 rounded-lg flex items-center justify-center font-bold text-sm shrink-0">
+                                    ២៥
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-slate-800">ការប្រលងឆមាសលើកទី១ ឆ្នាំសិក្សា ២០២៦</h4>
+                                    <p class="text-xs text-slate-500 mt-1">ការប្រលងនឹងចាប់ផ្តើមពីថ្ងៃទី២៥ ខែឧសភា ឆ្នាំ២០២៦ តទៅ។ សូមសិស្សានុសិស្សទាំងអស់រៀបចំខ្លួនឱ្យបានរួចរាល់។</p>
+                                </div>
+                            </div>
+                            <div class="p-4 rounded-xl bg-emerald-50/50 border border-emerald-100 flex gap-4">
+                                <div class="bg-emerald-600 text-white h-10 w-10 rounded-lg flex items-center justify-center font-bold text-sm shrink-0">
+                                    ៣០
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-slate-800">ពិព័រណ៍ស្នាដៃវិទ្យាសាស្ត្រយុវជន</h4>
+                                    <p class="text-xs text-slate-500 mt-1">ការដាក់បង្ហាញស្នាដៃពិសោធន៍ និងបច្ចេកវិទ្យារបស់សិស្សថ្នាក់ទី១២ គ្រប់បន្ទប់រៀនរៀងៗខ្លួន។</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+                        <h3 class="text-lg text-slate-800 font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-rocket text-purple-600"></i> ផ្លូវកាត់រហ័ស
+                        </h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="switchTab('students')" class="p-4 rounded-xl bg-slate-50 hover:bg-blue-50 hover:text-blue-600 text-slate-700 text-center transition group border border-slate-100">
+                                <i class="fas fa-user-plus text-xl text-slate-400 group-hover:text-blue-500 block mb-2"></i>
+                                <span class="text-xs font-semibold">ចុះឈ្មោះសិស្ស</span>
+                            </button>
+                            <button onclick="switchTab('grades')" class="p-4 rounded-xl bg-slate-50 hover:bg-purple-50 hover:text-purple-600 text-slate-700 text-center transition group border border-slate-100">
+                                <i class="fas fa-file-invoice-dollar text-xl text-slate-400 group-hover:text-purple-500 block mb-2"></i>
+                                <span class="text-xs font-semibold">បញ្ចូលពិន្ទុ</span>
+                            </button>
+                            <button onclick="switchTab('attendance')" class="p-4 rounded-xl bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 text-slate-700 text-center transition group border border-slate-100">
+                                <i class="fas fa-clipboard-user text-xl text-slate-400 group-hover:text-emerald-500 block mb-2"></i>
+                                <span class="text-xs font-semibold">កត់វត្តមាន</span>
+                            </button>
+                            <button onclick="switchTab('idcards')" class="p-4 rounded-xl bg-slate-50 hover:bg-amber-50 hover:text-amber-600 text-slate-700 text-center transition group border border-slate-100">
+                                <i class="fas fa-print text-xl text-slate-400 group-hover:text-amber-500 block mb-2"></i>
+                                <span class="text-xs font-semibold">បោះពុម្ពកាត</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. TAB: STUDENTS -->
+            <section id="tab-students" class="tab-content hidden space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl text-slate-800 font-bold">គ្រប់គ្រងព័ត៌មានសិស្ស</h1>
+                        <p class="text-slate-500 mt-1 text-sm">ចុះឈ្មោះ ស្វែងរក និងកែសម្រួលព័ត៌មានសិស្សក្នុងប្រព័ន្ធ</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+                    <!-- Form register student -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+                        <h3 class="text-lg text-slate-800 font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-user-plus text-blue-600"></i> បញ្ចូលព័ត៌មានសិស្សថ្មី
+                        </h3>
+                        <form id="student-form" onsubmit="event.preventDefault(); saveStudent();" class="space-y-4">
+                            <input type="hidden" id="student-index" value="">
+                            <div>
+                                <label class="text-xs font-bold text-slate-600 block mb-1">អត្តលេខសិស្ស (Student Code)</label>
+                                <input type="text" id="student-code" required placeholder="ឧ. STU001" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-slate-600 block mb-1">ឈ្មោះពេញ (FullName)</label>
+                                <input type="text" id="student-name" required placeholder="ឈ្មោះជាភាសាខ្មែរ" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-xs font-bold text-slate-600 block mb-1">ភេទ</label>
+                                    <select id="student-gender" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                        <option value="ប្រុស">ប្រុស</option>
+                                        <option value="ស្រី">ស្រី</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-slate-600 block mb-1">ថ្នាក់រៀន</label>
+                                    <select id="student-class" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                        <option value="១២ ក១">១២ ក១</option>
+                                        <option value="១២ ក២">១២ ក២</option>
+                                        <option value="១១ ខ១">១១ ខ១</option>
+                                        <option value="១០ គ៣">១០ គ៣</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-slate-600 block mb-1">លេខទូរស័ព្ទអាណាព្យាបាល</label>
+                                <input type="text" id="student-phone" required placeholder="012 345 678" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                            </div>
+                            <div class="flex gap-2 pt-2">
+                                <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm font-semibold transition">រក្សាទុក</button>
+                                <button type="button" onclick="resetStudentForm()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-sm transition">សម្អាត</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Students List Table -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 lg:col-span-2 overflow-hidden">
+                        <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+                            <h3 class="text-lg text-slate-800 font-bold">បញ្ជីឈ្មោះសិស្សានុសិស្ស</h3>
+                            <span class="px-2.5 py-1 bg-blue-50 text-blue-600 text-xs font-bold rounded-full" id="table-total-students">0 នាក់</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-50 border-b border-slate-100 text-xs font-bold text-slate-500 uppercase">
+                                        <th class="p-4 text-center">អត្តលេខ</th>
+                                        <th class="p-4">ឈ្មោះពេញ</th>
+                                        <th class="p-4 text-center">ភេទ</th>
+                                        <th class="p-4 text-center">ថ្នាក់</th>
+                                        <th class="p-4">លេខទូរស័ព្ទ</th>
+                                        <th class="p-4 text-center">សកម្មភាព</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="students-table-body" class="divide-y divide-slate-100 text-sm text-slate-600">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. TAB: TEACHERS -->
+            <section id="tab-teachers" class="tab-content hidden space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl text-slate-800 font-bold">គ្រប់គ្រងព័ត៌មានគ្រូបង្រៀន</h1>
+                        <p class="text-slate-500 mt-1 text-sm">បញ្ជីឈ្មោះគ្រូ និងការបន្ថែមសមាជិកសិក្សាធិការថ្មី</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+                    <!-- Teacher Add Form -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+                        <h3 class="text-lg text-slate-800 font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-chalkboard-teacher text-emerald-600"></i> បន្ថែមគ្រូបង្រៀនថ្មី
+                        </h3>
+                        <form id="teacher-form" onsubmit="event.preventDefault(); saveTeacher();" class="space-y-4">
+                            <input type="hidden" id="teacher-index" value="">
+                            <div>
+                                <label class="text-xs font-bold text-slate-600 block mb-1">ឈ្មោះពេញ (FullName)</label>
+                                <input type="text" id="teacher-name" required placeholder="ឈ្មោះជាភាសាខ្មែរ" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-xs font-bold text-slate-600 block mb-1">ភេទ</label>
+                                    <select id="teacher-gender" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                                        <option value="ប្រុស">ប្រុស</option>
+                                        <option value="ស្រី">ស្រី</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-slate-600 block mb-1">លេខទូរស័ព្ទ</label>
+                                    <input type="text" id="teacher-phone" required placeholder="012 999 888" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-slate-600 block mb-1">ជំនាញ/ឯកទេស</label>
+                                <input type="text" id="teacher-specialty" required placeholder="ឧ. គណិតវិទ្យា, រូបវិទ្យា" class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                            </div>
+                            <div class="flex gap-2 pt-2">
+                                <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg text-sm font-semibold transition">រក្សាទុក</button>
+                                <button type="button" onclick="resetTeacherForm()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-sm transition">សម្អាត</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Teachers Grid Cards -->
+                    <div class="lg:col-span-2 space-y-4">
+                        <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200/80">
+                            <span class="text-sm font-bold text-slate-800">សាស្ត្រាចារ្យទាំងអស់</span>
+                            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-600 text-xs font-bold rounded-full" id="grid-total-teachers">0 នាក់</span>
+                        </div>
+                        <div id="teachers-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Dynamic Card Grid -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. TAB: GRADES -->
+            <section id="tab-grades" class="tab-content hidden space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl text-slate-800 font-bold">លទ្ធផលសិក្សានិងចំណាត់ថ្នាក់</h1>
+                        <p class="text-slate-500 mt-1 text-sm">បញ្ចូលពិន្ទុ និងគណនាមធ្យមភាគសិស្សដោយស្វ័យប្រវត្តិ</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+                    <h3 class="text-lg text-slate-800 font-bold mb-4 flex items-center gap-2">
+                        <i class="fas fa-file-medical text-indigo-600"></i> បញ្ចូលពិន្ទុប្រចាំខែ
+                    </h3>
+                    
+                    <!-- Formula container utilizing display math for grading calculation -->
+                    <div id="formula-container" class="my-4 bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div>
+                            <span class="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1">រូបមន្តគណនាមធ្យមភាគស្តង់ដារសាលា៖</span>
+                            <p class="text-xs text-slate-400">មធ្យមភាគពិន្ទុត្រូវបានគណនាស្មើនឹងផលបូកមុខវិជ្ជាទាំង៣ ចែកនឹង៣។</p>
+                        </div>
+                        <div class="bg-white p-3 rounded-lg border border-slate-100 shadow-sm">
+                            <math display="math" class="text-indigo-600 font-bold">
+                                <mi>មធ្យមភាគ</mi>
+                                <mo>=</mo>
+                                <mfrac>
+                                    <mrow>
+                                        <mi>គណិត</mi>
+                                        <mo>+</mo>
+                                        <mi>រូបវិទ្យា</mi>
+                                        <mo>+</mo>
+                                        <mi>ខ្មែរ</mi>
+                                    </mrow>
+                                    <mn>3</mn>
+                                </mfrac>
+                            </math>
+                        </div>
+                    </div>
+
+                    <!-- Score Input Table -->
+                    <div class="overflow-x-auto mt-4">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase">
+                                    <th class="p-4">អត្តលេខ</th>
+                                    <th class="p-4">ឈ្មោះសិស្ស</th>
+                                    <th class="p-4 text-center">គណិតវិទ្យា</th>
+                                    <th class="p-4 text-center">រូបវិទ្យា</th>
+                                    <th class="p-4 text-center">អក្សរសាស្ត្រខ្មែរ</th>
+                                    <th class="p-4 text-center">មធ្យមភាគ</th>
+                                    <th class="p-4 text-center">និទ្ទេស (Grade)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="grades-table-body" class="divide-y divide-slate-100 text-sm text-slate-600">
+                                <!-- Dynamic grade rows with inputs -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. TAB: ATTENDANCE -->
+            <section id="tab-attendance" class="tab-content hidden space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl text-slate-800 font-bold">កត់ត្រាវត្តមានប្រចាំថ្ងៃ</h1>
+                        <p class="text-slate-500 mt-1 text-sm">ជ្រើសរើសវត្តមាន អវត្តមាន ឬច្បាប់ សម្រាប់សិស្សម្នាក់ៗ</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-emerald-50 text-emerald-600 p-2.5 rounded-lg">
+                                <i class="fas fa-calendar-alt text-lg"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-base text-slate-800 font-bold">បញ្ជីវត្តមាន - ថ្ងៃនេះ</h3>
+                                <p class="text-xs text-slate-400">កំណត់វត្តមានសម្រាប់ថ្ងៃនេះ</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="setAllAttendance('វត្តមាន')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded-lg text-xs font-bold transition">
+                                <i class="fas fa-check"></i> វត្តមានទាំងអស់
+                            </button>
+                            <button onclick="setAllAttendance('អវត្តមាន')" class="bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 rounded-lg text-xs font-bold transition">
+                                <i class="fas fa-times"></i> អវត្តមានទាំងអស់
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 border-b border-slate-100 text-xs font-bold text-slate-500 uppercase">
+                                    <th class="p-4">អត្តលេខ</th>
+                                    <th class="p-4">ឈ្មោះសិស្ស</th>
+                                    <th class="p-4 text-center">ថ្នាក់រៀន</th>
+                                    <th class="p-4 text-center">ស្ថានភាពវត្តមាន</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendance-table-body" class="divide-y divide-slate-100 text-sm text-slate-600">
+                                <!-- Dynamic attendance rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. TAB: ID CARDS -->
+            <section id="tab-idcards" class="tab-content hidden space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 no-print">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl text-slate-800 font-bold">បង្កើតកាតសម្គាល់សិស្ស</h1>
+                        <p class="text-slate-500 mt-1 text-sm">ជ្រើសរើសសិស្សដើម្បីទាញយក ឬបោះពុម្ពកាតផ្លូវការ</p>
+                    </div>
+                    <div>
+                        <button onclick="window.print();" class="bg-amber-500 hover:bg-amber-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition flex items-center gap-2 shadow-md shadow-amber-100">
+                            <i class="fas fa-print"></i> បោះពុម្ពកាតសម្គាល់សិស្ស
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start no-print">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+                        <h3 class="text-lg text-slate-800 font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-id-card text-amber-500"></i> កំណត់ព័ត៌មានកាត
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-xs font-bold text-slate-600 block mb-1">ជ្រើសរើសសិស្ស</label>
+                                <select id="id-card-student-selector" onchange="generateIDCard()" class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                                    <!-- Options populated dynamically -->
+                                </select>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200/50 space-y-2">
+                                <span class="text-xs font-bold text-slate-600 uppercase tracking-wider block">លក្ខខណ្ឌបោះពុម្ព៖</span>
+                                <p class="text-xs text-slate-400 leading-relaxed">ប្រព័ន្ធនឹងប្រើទំហំកាតស្តង់ដារ ៨៥.៦០មម x ៥៣.៩៨មម (CR80) សមស្របសម្រាប់បោះពុម្ពលើកាតជ័រ PVC។</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Realtime ID Card view -->
+                    <div class="lg:col-span-2 flex flex-col md:flex-row gap-6 justify-center items-center py-6 bg-slate-200/60 rounded-3xl border border-dashed border-slate-300">
+                        <!-- FRONT OF CARD -->
+                        <div id="id-front" class="w-[330px] h-[480px] bg-gradient-to-br from-blue-700 via-blue-800 to-indigo-950 rounded-2xl p-5 shadow-2xl text-white relative flex flex-col justify-between overflow-hidden ring-4 ring-white">
+                            <!-- Background abstract shape -->
+                            <div class="absolute -right-20 -top-20 w-52 h-52 bg-blue-500/20 rounded-full blur-xl"></div>
+                            
+                            <!-- Header -->
+                            <div class="text-center relative z-10 border-b border-white/20 pb-2">
+                                <h3 class="text-lg font-bold tracking-wide text-amber-300">វិទ្យាល័យឆ្លាតវៃ</h3>
+                                <p class="text-[9px] uppercase tracking-widest text-slate-200">Smart High School</p>
+                            </div>
+                            
+                            <!-- Body Info -->
+                            <div class="flex flex-col items-center mt-4 relative z-10">
+                                <img id="id-view-photo" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150" class="w-28 h-28 rounded-full border-4 border-amber-300 object-cover shadow-md mb-3" alt="Student photo">
+                                <h4 id="id-view-name" class="text-xl font-bold tracking-wide">ចាន់ ធីតា</h4>
+                                <span class="text-xs font-bold text-amber-300 tracking-wide mt-1">សិស្សានុសិស្ស</span>
+                            </div>
+                            
+                            <!-- Key details Grid -->
+                            <div class="grid grid-cols-2 gap-y-2 text-xs border-t border-white/20 pt-3 relative z-10">
+                                <div>
+                                    <span class="text-[9px] text-slate-300 uppercase block">អត្តលេខ</span>
+                                    <span id="id-view-code" class="font-bold">STU001</span>
+                                </div>
+                                <div>
+                                    <span class="text-[9px] text-slate-300 uppercase block">ថ្នាក់រៀន</span>
+                                    <span id="id-view-class" class="font-bold">១២ ក១</span>
+                                </div>
+                                <div>
+                                    <span class="text-[9px] text-slate-300 uppercase block">ឆ្នាំសិក្សា</span>
+                                    <span class="font-bold">២០២៥-២០២៦</span>
+                                </div>
+                                <div>
+                                    <span class="text-[9px] text-slate-300 uppercase block">សុពលភាព</span>
+                                    <span class="font-bold text-amber-300">៣១ សីហា ២៦</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Footer barcode mockup -->
+                            <div class="mt-4 flex flex-col items-center justify-center border-t border-white/10 pt-2 relative z-10">
+                                <div class="w-48 h-8 bg-white rounded flex items-center justify-center p-1">
+                                    <div class="w-full h-full bg-slate-900" style="background-image: repeating-linear-gradient(90deg, #1e293b, #1e293b 2px, transparent 2px, transparent 6px);"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BACK OF CARD -->
+                        <div id="id-back" class="w-[330px] h-[480px] bg-slate-950 text-white rounded-2xl p-6 shadow-2xl relative flex flex-col justify-between overflow-hidden ring-4 ring-white">
+                            <div>
+                                <h3 class="text-center text-xs font-bold text-amber-300 tracking-wider border-b border-slate-800 pb-2">លក្ខខណ្ឌប្រើប្រាស់កាត</h3>
+                                <ul class="list-decimal list-inside space-y-2.5 text-[10px] text-slate-300 mt-4 leading-relaxed font-sans">
+                                    <li>កាតនេះប្រើប្រាស់សម្រាប់តែការសម្គាល់ខ្លួន និងការចេញចូលក្នុងវិទ្យាល័យប៉ុណ្ណោះ។</li>
+                                    <li>សិស្សត្រូវតែពាក់កាតនេះជានិច្ចនៅពេលស្ថិតនៅក្នុងបរិវេណសាលា។</li>
+                                    <li>ការផ្ទេរកាត ឬឱ្យអ្នកដទៃខ្ចីប្រើប្រាស់ជាទង្វើខុសច្បាប់។</li>
+                                    <li>ករណីបាត់បង់កាត ត្រូវរាយការណ៍ទៅការិយាល័យរដ្ឋបាលជាបន្ទាន់។</li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Stamp and QR section -->
+                            <div class="flex items-center justify-between border-t border-slate-800 pt-4">
+                                <div class="text-left">
+                                    <span class="text-[8px] text-slate-400 block uppercase">អនុម័តដោយ</span>
+                                    <div class="w-24 h-6 text-emerald-500 font-bold border border-emerald-500/20 text-center rounded flex items-center justify-center text-[8px] tracking-widest my-1 uppercase rotate-2">
+                                        APPROVED
+                                    </div>
+                                    <span class="text-[9px] font-bold block">សាលានាយកដ្ឋាន</span>
+                                </div>
+                                <div class="bg-white p-1 rounded">
+                                    <!-- QR Code Mockup -->
+                                    <div class="w-16 h-16 bg-slate-900" style="background-image: conic-gradient(from 0deg at 50% 50%, #fff 25%, #1e293b 25%, #1e293b 50%, #fff 50%, #fff 75%, #1e293b 75%);"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Printable Area Wrapper (Only visible during print) -->
+                <div id="printable-area" class="hidden flex-row gap-6 justify-center items-center p-8 bg-white">
+                    <!-- Front card printed copy -->
+                    <div class="w-[3.375in] h-[2.125in] bg-gradient-to-r from-blue-700 to-indigo-900 text-white rounded-lg p-3 relative flex items-center justify-between border border-slate-200 select-none">
+                        <div class="flex flex-col justify-between h-full w-2/3">
+                            <div>
+                                <h4 class="text-xs font-bold text-amber-300">វិទ្យាល័យឆ្លាតវៃ</h4>
+                                <span class="text-[7px] text-slate-300 uppercase block">កាតសម្គាល់សិស្សានុសិស្ស</span>
+                            </div>
+                            <div class="text-xs my-1">
+                                <h5 class="font-bold text-sm" id="print-name">ឈ្មោះសិស្ស</h5>
+                                <div class="grid grid-cols-2 gap-y-0.5 text-[8px] mt-1 text-slate-200">
+                                    <div>ID: <strong id="print-code">STU000</strong></div>
+                                    <div>Class: <strong id="print-class">00</strong></div>
+                                </div>
+                            </div>
+                            <div class="w-full h-4 bg-white rounded p-0.5 mt-1">
+                                <div class="w-full h-full bg-slate-900" style="background-image: repeating-linear-gradient(90deg, #1e293b, #1e293b 1px, transparent 1px, transparent 3px);"></div>
+                            </div>
+                        </div>
+                        <div class="w-1/3 flex flex-col items-center justify-center h-full pl-2">
+                            <img id="print-photo" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100" class="w-16 h-16 rounded-full border border-amber-300 object-cover" alt="photo">
+                            <span class="text-[6px] text-slate-300 mt-1 uppercase">2025-2026</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. TAB: DEVELOPER API HUB -->
+            <section id="tab-api-hub" class="tab-content hidden space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl text-emerald-400 font-bold flex items-center gap-2">
+                            <i class="fas fa-terminal text-slate-800"></i> Backend Connection Center
+                        </h1>
+                        <p class="text-slate-500 mt-1 text-sm">ចម្លងកូដ PHP API និង SQL ទៅដំណើរការលើ Host របស់អ្នក ដើម្បីគ្រប់គ្រងទិន្នន័យផ្ទាល់</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- MySQL Setup File Code -->
+                    <div class="bg-slate-900 text-slate-100 p-6 rounded-2xl shadow-xl border border-slate-800">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-2">
+                                <i class="fas fa-database text-slate-400"></i> 1. db.php (ការភ្ជាប់ MySQL PDO)
+                            </h3>
+                            <button onclick="copyToClipboard('code-db')" class="text-xs bg-slate-800 hover:bg-slate-700 px-2.5 py-1.5 rounded text-slate-300 transition">
+                                <i class="far fa-copy"></i> ចម្លងទុក
+                            </button>
+                        </div>
+                        <pre class="bg-slate-950 p-4 rounded-xl text-xs overflow-x-auto text-sky-400 font-mono" id="code-db"><code>&lt;?php
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'school_db');
+
+try {
+    $pdo = new PDO(
+        "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
+        DB_USER,
+        DB_PASS,
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        ]
+    );
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+?&gt;</code></pre>
+                    </div>
+
+                    <!-- Complete Student Fetch PHP API -->
+                    <div class="bg-slate-900 text-slate-100 p-6 rounded-2xl shadow-xl border border-slate-800">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-2">
+                                <i class="fas fa-network-wired text-slate-400"></i> 2. api.php (ទាញទិន្នន័យជា JSON)
+                            </h3>
+                            <button onclick="copyToClipboard('code-api')" class="text-xs bg-slate-800 hover:bg-slate-700 px-2.5 py-1.5 rounded text-slate-300 transition">
+                                <i class="far fa-copy"></i> ចម្លងទុក
+                            </button>
+                        </div>
+                        <pre class="bg-slate-950 p-4 rounded-xl text-xs overflow-x-auto text-amber-400 font-mono" id="code-api"><code>&lt;?php
+header("Content-Type: application/json; charset=UTF-8");
+require_once 'db.php';
+
+$action = $_GET['action'] ?? '';
+
+if ($action === 'get_students') {
+    try {
+        $stmt = $pdo->query("SELECT s.*, c.class_name 
+                             FROM students s 
+                             LEFT JOIN classes c ON s.class_id = c.id");
+        echo json_encode($stmt->fetchAll());
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode(["error" => $e->getMessage()]);
+    }
+}
+?&gt;</code></pre>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- JS INTERACTIVE APP CONTROLLER -->
+    <script>
+        // Core mock dataset initialized natively
+        let students = [
+            { id: 1, student_code: "STU001", name: "សុខ សាន្ត", gender: "ប្រុស", class: "១២ ក១", phone: "012 345 678", math: 95, physics: 88, khmer: 90, attendance: "វត្តមាន" },
+            { id: 2, student_code: "STU002", name: "ចាន់ ធីតា", gender: "ស្រី", class: "១២ ក១", phone: "098 765 432", math: 85, physics: 92, khmer: 89, attendance: "វត្តមាន" },
+            { id: 3, student_code: "STU003", name: "មាស សុវណ្ណ", gender: "ប្រុស", class: "១១ ខ១", phone: "011 222 333", math: 75, physics: 60, khmer: 72, attendance: "ច្បាប់" },
+            { id: 4, student_code: "STU004", name: "គង់ ដារ៉ា", gender: "ប្រុស", class: "១០ គ៣", phone: "077 888 999", math: 50, physics: 45, khmer: 62, attendance: "អវត្តមាន" }
+        ];
+
+        let teachers = [
+            { name: "លោកគ្រូ សុខ ជា", gender: "ប្រុស", specialty: "គណិតវិទ្យា", phone: "012 999 888", photo: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?auto=format&fit=crop&q=80&w=100" },
+            { name: "អ្នកគ្រូ នួន សុខា", gender: "ស្រី", specialty: "រូបវិទ្យា", phone: "088 111 222", photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100" },
+            { name: "លោកគ្រូ ឈួន មុនី", gender: "ប្រុស", specialty: "អក្សរសាស្ត្រខ្មែរ", phone: "077 222 333", photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100" }
+        ];
+
+        // Load content on ready
+        document.addEventListener("DOMContentLoaded", () => {
+            renderStudentsTable();
+            renderTeachersGrid();
+            renderGradesTable();
+            renderAttendanceTable();
+            populateStudentSelector();
+            updateDashboardStats();
+            
+            // Highlight today's date dynamically
+            const dateObj = new Date();
+            const days = ["អាទិត្យ", "ច័ន្ទ", "អង្គារ", "ពុធ", "ព្រហស្បតិ៍", "សុក្រ", "សៅរ៍"];
+            const months = ["មករា", "កុម្ភៈ", "មីនា", "មេសា", "ឧសភា", "មិថុនា", "កក្កដា", "សីហា", "កញ្ញា", "តុលា", "វិច្ឆិកា", "ធ្នូ"];
+            document.getElementById('current-date').innerText = `ថ្ងៃ${days[dateObj.getDay()]} ទី${dateObj.getDate()} ខែ${months[dateObj.getMonth()]} ឆ្នាំ${dateObj.getFullYear()}`;
+        });
+
+        // Tab Switch logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                btn.className = "nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-all";
+            });
+            document.getElementById(`btn-${tabId}`).className = "nav-item active flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all bg-blue-600 text-white font-medium";
+            
+            if (tabId === 'idcards') {
+                populateStudentSelector();
+                generateIDCard();
+            }
+        }
+
+        // Student Data renderers
+        function renderStudentsTable() {
+            const tableBody = document.getElementById("students-table-body");
+            tableBody.innerHTML = "";
+            
+            students.forEach((student, index) => {
+                const row = document.createElement("tr");
+                row.className = "hover:bg-slate-50 transition";
+                row.innerHTML = `
+                    <td class="p-4 font-bold text-slate-900 text-center">${student.student_code}</td>
+                    <td class="p-4 font-semibold text-slate-800">${student.name}</td>
+                    <td class="p-4 text-center">${student.gender}</td>
+                    <td class="p-4 text-center"><span class="px-2.5 py-1 bg-slate-100 text-slate-700 text-xs font-bold rounded-lg">${student.class}</span></td>
+                    <td class="p-4">${student.phone}</td>
+                    <td class="p-4 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <button onclick="editStudent(${index})" class="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded transition" title="កែប្រែ">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteStudent(${index})" class="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded transition" title="លុប">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+            document.getElementById("table-total-students").innerText = `${students.length} នាក់`;
+            updateDashboardStats();
+        }
+
+        // Add/Save Student controller
+        function saveStudent() {
+            const index = document.getElementById("student-index").value;
+            const code = document.getElementById("student-code").value;
+            const name = document.getElementById("student-name").value;
+            const gender = document.getElementById("student-gender").value;
+            const sClass = document.getElementById("student-class").value;
+            const phone = document.getElementById("student-phone").value;
+
+            const studentObj = {
+                student_code: code,
+                name: name,
+                gender: gender,
+                class: sClass,
+                phone: phone,
+                math: 0,
+                physics: 0,
+                khmer: 0,
+                attendance: "វត្តមាន"
+            };
+
+            if (index === "") {
+                // New student
+                studentObj.id = students.length + 1;
+                students.push(studentObj);
+            } else {
+                // Edit existing student
+                students[index].student_code = code;
+                students[index].name = name;
+                students[index].gender = gender;
+                students[index].class = sClass;
+                students[index].phone = phone;
+            }
+
+            renderStudentsTable();
+            renderGradesTable();
+            renderAttendanceTable();
+            resetStudentForm();
+        }
+
+        function editStudent(index) {
+            const student = students[index];
+            document.getElementById("student-index").value = index;
+            document.getElementById("student-code").value = student.student_code;
+            document.getElementById("student-name").value = student.name;
+            document.getElementById("student-gender").value = student.gender;
+            document.getElementById("student-class").value = student.class;
+            document.getElementById("student-phone").value = student.phone;
+        }
+
+        function deleteStudent(index) {
+            if (confirm("តើអ្នកប្រាកដជាចង់លុបព័ត៌មានសិស្សានុសិស្សនេះមែនទេ?")) {
+                students.splice(index, 1);
+                renderStudentsTable();
+                renderGradesTable();
+                renderAttendanceTable();
+            }
+        }
+
+        function resetStudentForm() {
+            document.getElementById("student-index").value = "";
+            document.getElementById("student-form").reset();
+        }
+
+        // Teachers section controllers
+        function renderTeachersGrid() {
+            const grid = document.getElementById("teachers-grid");
+            grid.innerHTML = "";
+            
+            teachers.forEach((teacher, index) => {
+                const card = document.createElement("div");
+                card.className = "bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center gap-4 hover:shadow-md transition";
+                card.innerHTML = `
+                    <img src="${teacher.photo || 'https://via.placeholder.com/100'}" alt="${teacher.name}" class="w-14 h-14 rounded-full object-cover ring-2 ring-emerald-50 shrink-0">
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-slate-800 text-sm truncate">${teacher.name}</h4>
+                        <p class="text-xs text-emerald-600 font-bold mt-1">${teacher.specialty}</p>
+                        <p class="text-[11px] text-slate-400 mt-0.5"><i class="fas fa-phone text-[10px]"></i> ${teacher.phone}</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            document.getElementById("grid-total-teachers").innerText = `${teachers.length} នាក់`;
+            updateDashboardStats();
+        }
+
+        function saveTeacher() {
+            const name = document.getElementById("teacher-name").value;
+            const gender = document.getElementById("teacher-gender").value;
+            const phone = document.getElementById("teacher-phone").value;
+            const specialty = document.getElementById("teacher-specialty").value;
+
+            const teacherObj = {
+                name: name,
+                gender: gender,
+                specialty: specialty,
+                phone: phone,
+                photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100"
+            };
+
+            teachers.push(teacherObj);
+            renderTeachersGrid();
+            resetTeacherForm();
+        }
+
+        function resetTeacherForm() {
+            document.getElementById("teacher-index").value = "";
+            document.getElementById("teacher-form").reset();
+        }
+
+        // Grades & Scoring Table Controls
+        function renderGradesTable() {
+            const tableBody = document.getElementById("grades-table-body");
+            tableBody.innerHTML = "";
+            
+            students.forEach((student, index) => {
+                const mathValue = student.math || 0;
+                const physValue = student.physics || 0;
+                const khmrValue = student.khmer || 0;
+                
+                // Automatic Live Calculation using native Math values
+                const average = ((parseFloat(mathValue) + parseFloat(physValue) + parseFloat(khmrValue)) / 3).toFixed(1);
+                
+                // Live Grade Mapping
+                let grade = 'F';
+                if (average >= 90) grade = 'A';
+                else if (average >= 80) grade = 'B';
+                else if (average >= 70) grade = 'C';
+                else if (average >= 60) grade = 'D';
+                else if (average >= 50) grade = 'E';
+
+                const gradeColors = {
+                    'A': 'bg-emerald-500 text-white',
+                    'B': 'bg-teal-500 text-white',
+                    'C': 'bg-indigo-500 text-white',
+                    'D': 'bg-amber-500 text-white',
+                    'E': 'bg-orange-500 text-white',
+                    'F': 'bg-red-500 text-white'
+                };
+
+                const row = document.createElement("tr");
+                row.className = "hover:bg-slate-50 transition";
+                row.innerHTML = `
+                    <td class="p-4 font-bold text-center">${student.student_code}</td>
+                    <td class="p-4 font-semibold text-slate-800">${student.name}</td>
+                    <td class="p-4 text-center">
+                        <input type="number" min="0" max="100" value="${mathValue}" onchange="updateScore(${index}, 'math', this.value)" class="w-16 px-2 py-1 text-center rounded border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500">
+                    </td>
+                    <td class="p-4 text-center">
+                        <input type="number" min="0" max="100" value="${physValue}" onchange="updateScore(${index}, 'physics', this.value)" class="w-16 px-2 py-1 text-center rounded border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500">
+                    </td>
+                    <td class="p-4 text-center">
+                        <input type="number" min="0" max="100" value="${khmrValue}" onchange="updateScore(${index}, 'khmer', this.value)" class="w-16 px-2 py-1 text-center rounded border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500">
+                    </td>
+                    <td class="p-4 text-center font-bold text-indigo-600">${average}</td>
+                    <td class="p-4 text-center">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold ${gradeColors[grade] || 'bg-slate-100'}">${grade}</span>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function updateScore(index, subject, value) {
+            students[index][subject] = parseFloat(value) || 0;
+            renderGradesTable();
+        }
+
+        // Attendance Table controls
+        function renderAttendanceTable() {
+            const tableBody = document.getElementById("attendance-table-body");
+            tableBody.innerHTML = "";
+            
+            students.forEach((student, index) => {
+                const currentStatus = student.attendance || "វត្តមាន";
+                
+                const statusConfig = {
+                    'វត្តមាន': 'bg-emerald-50 text-emerald-700 ring-emerald-600/10',
+                    'អវត្តមាន': 'bg-red-50 text-red-700 ring-red-600/10',
+                    'ច្បាប់': 'bg-amber-50 text-amber-700 ring-amber-600/10'
+                };
+
+                const row = document.createElement("tr");
+                row.className = "hover:bg-slate-50 transition";
+                row.innerHTML = `
+                    <td class="p-4 font-bold text-center">${student.student_code}</td>
+                    <td class="p-4 font-semibold text-slate-800">${student.name}</td>
+                    <td class="p-4 text-center"><span class="px-2 py-1 bg-slate-100 rounded-md text-xs font-bold text-slate-600">${student.class}</span></td>
+                    <td class="p-4 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <button onclick="setStudentAttendance(${index}, 'វត្តមាន')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${currentStatus === 'វត្តមាន' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}">វត្តមាន</button>
+                            <button onclick="setStudentAttendance(${index}, 'អវត្តមាន')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${currentStatus === 'អវត្តមាន' ? 'bg-red-600 text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}">អវត្តមាន</button>
+                            <button onclick="setStudentAttendance(${index}, 'ច្បាប់')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${currentStatus === 'ច្បាប់' ? 'bg-amber-500 text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}">ច្បាប់</button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function setStudentAttendance(index, status) {
+            students[index].attendance = status;
+            renderAttendanceTable();
+            updateDashboardStats();
+        }
+
+        function setAllAttendance(status) {
+            students.forEach((_, index) => students[index].attendance = status);
+            renderAttendanceTable();
+            updateDashboardStats();
+        }
+
+        // ID Card Dynamic Generator
+        function populateStudentSelector() {
+            const selector = document.getElementById("id-card-student-selector");
+            selector.innerHTML = "";
+            students.forEach(student => {
+                const opt = document.createElement("option");
+                opt.value = student.id;
+                opt.innerText = `${student.name} (${student.student_code})`;
+                selector.appendChild(opt);
+            });
+        }
+
+        function generateIDCard() {
+            const selector = document.getElementById("id-card-student-selector");
+            const selectedID = selector.value;
+            const student = students.find(s => s.id == selectedID);
+            
+            if (!student) return;
+
+            // Female photo generation mock
+            const defaultPhoto = student.gender === "ស្រី" 
+                ? "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150"
+                : "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150";
+
+            // Update real-time screen visualization ID card front
+            document.getElementById("id-view-photo").src = defaultPhoto;
+            document.getElementById("id-view-name").innerText = student.name;
+            document.getElementById("id-view-code").innerText = student.student_code;
+            document.getElementById("id-view-class").innerText = student.class;
+
+            // Update printable area details
+            document.getElementById("print-photo").src = defaultPhoto;
+            document.getElementById("print-name").innerText = student.name;
+            document.getElementById("print-code").innerText = student.student_code;
+            document.getElementById("print-class").innerText = student.class;
+        }
+
+        // Stats Aggregator
+        function updateDashboardStats() {
+            document.getElementById("stat-total-students").innerText = students.length;
+            document.getElementById("stat-total-teachers").innerText = teachers.length;
+            
+            const presentCount = students.filter(s => s.attendance === 'វត្តមាន').length;
+            const rate = ((presentCount / students.length) * 100).toFixed(1);
+            document.getElementById("stat-attendance").innerText = students.length > 0 ? `${rate}%` : "0%";
+        }
+
+        // Code copier utility
+        function copyToClipboard(elementId) {
+            const textToCopy = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert("កូដត្រូវបានចម្លងទុក!");
+            }).catch(err => {
+                console.error("Error copy: ", err);
+            });
         }
     </script>
 </body>
