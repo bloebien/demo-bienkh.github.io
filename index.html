@@ -69,6 +69,26 @@
 </head>
 <body class="bg-slate-100 min-height-screen flex flex-col md:flex-row overflow-hidden">
 
+    <!-- Custom Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none no-print"></div>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="confirm-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4 no-print transition-all duration-300">
+        <div id="confirm-modal-content" class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl transform scale-95 opacity-0 transition-all duration-300">
+            <div class="text-center">
+                <div class="w-12 h-12 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-exclamation-triangle text-xl"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800 mb-2" id="confirm-title">បញ្ជាក់ការលុប</h3>
+                <p class="text-sm text-slate-500 mb-6" id="confirm-message">តើអ្នកពិតជាចង់លុបទិន្នន័យនេះមែនទេ?</p>
+                <div class="flex gap-3">
+                    <button id="confirm-cancel-btn" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-sm font-semibold transition">បោះបង់</button>
+                    <button id="confirm-ok-btn" class="flex-1 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-semibold transition">យល់ព្រម</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- SIDEBAR -->
     <aside class="w-full md:w-64 bg-slate-900 text-white flex flex-col z-30 shadow-xl no-print">
         <div class="p-5 flex items-center gap-3 border-b border-slate-800 bg-slate-950">
@@ -837,6 +857,7 @@ if ($action === 'get_students') {
                 // New student
                 studentObj.id = students.length + 1;
                 students.push(studentObj);
+                showToast("បានបន្ថែមព័ត៌មានសិស្សថ្មីជោគជ័យ!");
             } else {
                 // Edit existing student
                 students[index].student_code = code;
@@ -844,6 +865,7 @@ if ($action === 'get_students') {
                 students[index].gender = gender;
                 students[index].class = sClass;
                 students[index].phone = phone;
+                showToast("បានកែប្រែព័ត៌មានសិស្សជោគជ័យ!");
             }
 
             renderStudentsTable();
@@ -863,12 +885,17 @@ if ($action === 'get_students') {
         }
 
         function deleteStudent(index) {
-            if (confirm("តើអ្នកប្រាកដជាចង់លុបព័ត៌មានសិស្សានុសិស្សនេះមែនទេ?")) {
-                students.splice(index, 1);
-                renderStudentsTable();
-                renderGradesTable();
-                renderAttendanceTable();
-            }
+            showConfirm(
+                "លុបព័ត៌មានសិស្ស",
+                "តើអ្នកប្រាកដជាចង់លុបព័ត៌មានសិស្សានុសិស្សនេះមែនទេ?",
+                () => {
+                    students.splice(index, 1);
+                    renderStudentsTable();
+                    renderGradesTable();
+                    renderAttendanceTable();
+                    showToast("បានលុបព័ត៌មានសិស្សដោយជោគជ័យ!", "error");
+                }
+            );
         }
 
         function resetStudentForm() {
@@ -915,6 +942,7 @@ if ($action === 'get_students') {
             teachers.push(teacherObj);
             renderTeachersGrid();
             resetTeacherForm();
+            showToast("បានបន្ថែមព័ត៌មានគ្រូបង្រៀនថ្មីជោគជ័យ!");
         }
 
         function resetTeacherForm() {
@@ -1071,14 +1099,90 @@ if ($action === 'get_students') {
             document.getElementById("stat-attendance").innerText = students.length > 0 ? `${rate}%` : "0%";
         }
 
-        // Code copier utility
+        // Custom Toast system
+        function showToast(message, type = "success") {
+            const container = document.getElementById("toast-container");
+            const toast = document.createElement("div");
+            toast.className = `p-4 rounded-xl shadow-lg text-sm font-semibold text-white transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-auto flex items-center gap-3 ${
+                type === "success" ? "bg-emerald-600" : type === "error" ? "bg-red-600" : "bg-blue-600"
+            }`;
+            const icon = type === "success" ? "fa-check-circle" : type === "error" ? "fa-exclamation-circle" : "fa-info-circle";
+            toast.innerHTML = `<i class="fas ${icon} text-lg"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove("translate-y-2", "opacity-0");
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.add("translate-y-2", "opacity-0");
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Custom Confirmation Modal system
+        let confirmCallback = null;
+        function showConfirm(title, message, callback) {
+            const modal = document.getElementById("confirm-modal");
+            const content = document.getElementById("confirm-modal-content");
+            document.getElementById("confirm-title").innerText = title;
+            document.getElementById("confirm-message").innerText = message;
+            
+            confirmCallback = callback;
+            
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+            setTimeout(() => {
+                content.classList.remove("scale-95", "opacity-0");
+            }, 10);
+        }
+
+        function closeConfirm(approved) {
+            const modal = document.getElementById("confirm-modal");
+            const content = document.getElementById("confirm-modal-content");
+            
+            content.classList.add("scale-95", "opacity-0");
+            setTimeout(() => {
+                modal.classList.add("hidden");
+                modal.classList.remove("flex");
+                if (approved && confirmCallback) {
+                    confirmCallback();
+                }
+                confirmCallback = null;
+            }, 300);
+        }
+        
+        document.getElementById("confirm-cancel-btn").addEventListener("click", () => closeConfirm(false));
+        document.getElementById("confirm-ok-btn").addEventListener("click", () => closeConfirm(true));
+
+        // Code copier utility using input fallback logic for iFrame/permissions security sandbox
         function copyToClipboard(elementId) {
             const textToCopy = document.getElementById(elementId).innerText;
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                alert("កូដត្រូវបានចម្លងទុក!");
-            }).catch(err => {
+            
+            const tempTextArea = document.createElement("textarea");
+            tempTextArea.value = textToCopy;
+            tempTextArea.style.top = "0";
+            tempTextArea.style.left = "0";
+            tempTextArea.style.position = "fixed";
+            document.body.appendChild(tempTextArea);
+            tempTextArea.focus();
+            tempTextArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast("កូដត្រូវបានចម្លងទុកជោគជ័យ!");
+                } else {
+                    showToast("មិនអាចចម្លងកូដបានទេ!", "error");
+                }
+            } catch (err) {
                 console.error("Error copy: ", err);
-            });
+                showToast("មានបញ្ហាក្នុងការចម្លង!", "error");
+            }
+            
+            document.body.removeChild(tempTextArea);
         }
     </script>
 </body>
