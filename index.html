@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ប្រព័ន្ធគ្រប់គ្រងសាលារៀន</title>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --background: #f4f6f9;
+            --text-color: #333;
+            --card-bg: #ffffff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Battambang', sans-serif; }
+        body { display: flex; height: 100vh; background-color: var(--background); color: var(--text-color); }
+        
+        /* Sidebar */
+        .sidebar { width: 250px; background-color: var(--primary); color: white; display: flex; flex-direction: column; }
+        .sidebar h2 { text-align: center; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 18px; }
+        .nav-links { list-style: none; padding: 20px 0; flex-grow: 1; }
+        .nav-links li { padding: 15px 20px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 15px; }
+        .nav-links li:hover, .nav-links li.active { background-color: var(--secondary); }
+        
+        /* Main Content */
+        .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header h1 { color: var(--primary); }
+        
+        /* Sections */
+        .section { display: none; animation: fadeIn 0.5s; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Cards & Tables */
+        .card { background: var(--card-bg); padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        table th, table td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        table th { background-color: var(--secondary); color: white; }
+        
+        /* ID Card Design */
+        .id-card-container { display: flex; justify-content: center; margin-top: 20px; }
+        .id-card { background: linear-gradient(135deg, #3498db, #2980b9); color: white; width: 320px; border-radius: 15px; padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); text-align: center; position: relative; overflow: hidden; }
+        .id-card img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid white; margin-bottom: 10px; object-fit: cover; }
+        .id-card h3 { margin-bottom: 5px; font-size: 20px; }
+        .id-card p { font-size: 14px; margin-bottom: 5px; opacity: 0.9; }
+        .id-card .barcode { margin-top: 15px; background: white; height: 30px; border-radius: 5px; width: 80%; margin-left: auto; margin-right: auto; }
+        
+        /* Grid */
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .stat-card { background: var(--card-bg); padding: 20px; border-radius: 10px; text-align: center; border-left: 5px solid var(--secondary); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <h2><i class="fas fa-school"></i> សាលារៀនឆ្លាតវៃ</h2>
+        <ul class="nav-links">
+            <li class="active" onclick="showSection('home')"><i class="fas fa-home"></i> ទំព័រដើម</li>
+            <li onclick="showSection('students')"><i class="fas fa-user-graduate"></i> ព័ត៌មានសិស្ស</li>
+            <li onclick="showSection('teachers')"><i class="fas fa-chalkboard-teacher"></i> អំពីគ្រូបង្រៀន</li>
+            <li onclick="showSection('grades')"><i class="fas fa-chart-line"></i> លទ្ធផលសិក្សា</li>
+            <li onclick="showSection('attendance')"><i class="fas fa-calendar-check"></i> បញ្ជីវត្តមាន</li>
+            <li onclick="showSection('idcard')"><i class="fas fa-id-badge"></i> កាតសិស្ស</li>
+        </ul>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        
+        <!-- 1. ទំព័រដើម (Home) -->
+        <div id="home" class="section active">
+            <div class="header">
+                <h1>ទំព័រដើម (Dashboard)</h1>
+            </div>
+            <div class="grid-3">
+                <div class="stat-card">
+                    <h3><i class="fas fa-users text-primary"></i> សិស្សសរុប</h3>
+                    <h2 style="margin-top: 10px; color: var(--secondary);">១,២៥០ នាក់</h2>
+                </div>
+                <div class="stat-card">
+                    <h3><i class="fas fa-chalkboard-teacher"></i> គ្រូបង្រៀន</h3>
+                    <h2 style="margin-top: 10px; color: var(--secondary);">៨៥ នាក់</h2>
+                </div>
+                <div class="stat-card">
+                    <h3><i class="fas fa-door-open"></i> បន្ទប់រៀន</h3>
+                    <h2 style="margin-top: 10px; color: var(--secondary);">៤២ បន្ទប់</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. ព័ត៌មានសិស្ស (Students) -->
+        <div id="students" class="section">
+            <div class="header"><h1>បញ្ជីព័ត៌មានសិស្ស</h1></div>
+            <div class="card">
+                <table>
+                    <tr><th>អត្តលេខ</th><th>ឈ្មោះសិស្ស</th><th>ភេទ</th><th>ថ្នាក់</th><th>លេខទូរស័ព្ទ</th></tr>
+                    <tr><td>STU001</td><td>សុខ សាន្ត</td><td>ប្រុស</td><td>១២ ក</td><td>012 345 678</td></tr>
+                    <tr><td>STU002</td><td>ចាន់ ធីតា</td><td>ស្រី</td><td>១២ ក</td><td>098 765 432</td></tr>
+                    <tr><td>STU003</td><td>មាស សុវណ្ណ</td><td>ប្រុស</td><td>១១ ខ</td><td>011 222 333</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. អំពីគ្រូបង្រៀន (Teachers) -->
+        <div id="teachers" class="section">
+            <div class="header"><h1>អំពីគ្រូបង្រៀន</h1></div>
+            <div class="grid-3">
+                <div class="card" style="text-align: center;">
+                    <i class="fas fa-user-circle fa-4x" style="color:#bdc3c7; margin-bottom:15px;"></i>
+                    <h3>លោកគ្រូ សុខ ជា</h3>
+                    <p>ឯកទេស៖ គណិតវិទ្យា</p>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <i class="fas fa-user-circle fa-4x" style="color:#bdc3c7; margin-bottom:15px;"></i>
+                    <h3>អ្នកគ្រូ នួន សុខា</h3>
+                    <p>ឯកទេស៖ រូបវិទ្យា</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. លទ្ធផលសិក្សា (Grades) -->
+        <div id="grades" class="section">
+            <div class="header"><h1>លទ្ធផលសិក្សាប្រចាំខែ</h1></div>
+            <div class="card">
+                <table>
+                    <tr><th>ឈ្មោះសិស្ស</th><th>គណិតវិទ្យា</th><th>រូបវិទ្យា</th><th>អក្សរសាស្ត្រខ្មែរ</th><th>ចំណាត់ថ្នាក់</th></tr>
+                    <tr><td>សុខ សាន្ត</td><td>៩៥</td><td>៨៨</td><td>៩០</td><td>លេខ ១</td></tr>
+                    <tr><td>ចាន់ ធីតា</td><td>៨៥</td><td>៩២</td><td>៨៩</td><td>លេខ ២</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 5. បញ្ជីវត្តមាន (Attendance) -->
+        <div id="attendance" class="section">
+            <div class="header"><h1>បញ្ជីវត្តមានថ្ងៃនេះ</h1></div>
+            <div class="card">
+                <table>
+                    <tr><th>ឈ្មោះសិស្ស</th><th>ស្ថានភាព</th><th>កាលបរិច្ឆេទ</th></tr>
+                    <tr><td>សុខ សាន្ត</td><td style="color: green;"><i class="fas fa-check-circle"></i> វត្តមាន</td><td>ថ្ងៃនេះ</td></tr>
+                    <tr><td>ចាន់ ធីតា</td><td style="color: red;"><i class="fas fa-times-circle"></i> អវត្តមាន</td><td>ថ្ងៃនេះ</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 6. កាតសិស្ស (ID Card) -->
+        <div id="idcard" class="section">
+            <div class="header"><h1>កាតសម្គាល់សិស្ស (ID Card)</h1></div>
+            <div class="id-card-container">
+                <div class="id-card">
+                    <h2>វិទ្យាល័យ ឆ្លាតវៃ</h2>
+                    <hr style="margin: 10px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.3);">
+                    <!-- Placeholder for Student Image -->
+                    <img src="https://via.placeholder.com/100" alt="Student Photo">
+                    <h3>សុខ សាន្ត</h3>
+                    <p>អត្តលេខ៖ STU001</p>
+                    <p>ថ្នាក់រៀន៖ ១២ ក</p>
+                    <p>ឆ្នាំសិក្សា៖ ២០២៥-២០២៦</p>
+                    <div class="barcode"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // លាក់ទំព័រទាំងអស់
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            // បង្ហាញទំព័រដែលបានចុច
+            document.getElementById(sectionId).classList.add('active');
+            
+            // ដកពណ៌ពីប៊ូតុងទាំងអស់
+            document.querySelectorAll('.nav-links li').forEach(li => li.classList.remove('active'));
+            // ដាក់ពណ៌លើប៊ូតុងដែលកំពុងចុច
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>
